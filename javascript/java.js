@@ -117,15 +117,13 @@ $("#submit-button").on("click", function() {
     destination = snapshot.val().destination;
     firstTrainTime = snapshot.val().firstTrainTime;
     frequency = snapshot.val().frequency;
-    
+
   // Change the HTML to reflect
   $("#newTrain").append("<tr><td>" + snapshot.val().trainName + "</td>" +
     "<td>" + snapshot.val().destination + "</td>" + 
     "<td>" + "Every " + snapshot.val().frequency + " mins" + "</td>" + 
     "<td>" + snapshot.val().nextArrival + "</td>" +
     "<td>" + snapshot.val().minutesAway + " mins until arrival" + "</td>" +
-   // "<td><button class='delete btn btn-default btn-sm' data-index='" + index + "'><span class='glyphicon glyphicon-trash'></span></button> " + 
-   // "<button type='button' class='btn btn-default btn-sm'><span class='glyphicon glyphicon-edit'></span></button>" +
     "</td></tr>");
 
   index++;
