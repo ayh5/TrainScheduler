@@ -18,9 +18,8 @@ var firstTrainTime = "";
 var frequency = 0;
 var currentTime = moment();
 var index = 0;
-var trainIDs = [];
 
-//Show current time
+
 var datetime = null,
 date = null;
 
@@ -36,7 +35,6 @@ $(document).ready(function(){
 });
 
 
-// Capture Button Click
 $("#submit-button").on("click", function() {
 
   trainName = $("#trainName").val().trim();
@@ -49,27 +47,19 @@ $("#submit-button").on("click", function() {
   console.log(firstTrainTime);
   console.log(frequency);
   
-  // First Time (pushed back 1 year to make sure it comes before current time)
+  
   var firstTimeConverted = moment(firstTrainTime, "hh:mm").subtract(1, "years");
-  //console.log("FTC: "+firstTimeConverted);
 
-  // Difference between the times
   var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-  //console.log("Difference in time: " + diffTime);
 
-  // Time apart (remainder)
   var tRemainder = diffTime % frequency;
-  //console.log(tRemainder);
 
-  // Minute Until Train
   var minutesAway = frequency - tRemainder;
-  //console.log("Minutes away: " + minutesAway);
 
-  // Next Train
   var nextTrain = moment().add(minutesAway, "minutes");
-  //console.log("Arrival time: " + moment(nextTrain).format("hh:mm"));
+  
 
-  // Arrival time
+ 
   var nextArrival = moment(nextTrain).format("hh:mm a");
 
   var nextArrivalUpdate = function() {
@@ -77,7 +67,6 @@ $("#submit-button").on("click", function() {
     datetime.html(date.format('hh:mm a'));
   }
 
-  // Code for handling the push
   database.ref().push({
     trainName: trainName,
     destination: destination,
@@ -96,12 +85,10 @@ $("#submit-button").on("click", function() {
   $("#firstTrainTime").val("");
   $("#frequency").val("");
   
-  // Don't refresh the page!
+
   return false; 
 });
 
-// Firebase watcher + initial loader HINT: This code behaves similarly to .on("child_added")
-// This will only show the 25 latest entries
   database.ref().orderByChild("dateAdded").limitToLast(20).on("child_added", function(snapshot) {
 
 
@@ -118,7 +105,7 @@ $("#submit-button").on("click", function() {
     firstTrainTime = snapshot.val().firstTrainTime;
     frequency = snapshot.val().frequency;
 
-  // Change the HTML to reflect
+ 
   $("#newTrain").append("<tr><td>" + snapshot.val().trainName + "</td>" +
     "<td>" + snapshot.val().destination + "</td>" + 
     "<td>" + "Every " + snapshot.val().frequency + " mins" + "</td>" + 
@@ -130,18 +117,5 @@ $("#submit-button").on("click", function() {
 
   // Handle the errors
   }, function(errorObject) {
-    console.log("Errors handled: " + errorObject.code);
+    console.log("Errors: " + errorObject.code);
   });
-
-  //Gets the train IDs in an Array
-  database.ref().once('value', function(dataSnapshot){ 
-    var trainIndex = 0;
-
-      dataSnapshot.forEach(
-          function(childSnapshot) {
-              trainIDs[trainIndex++] = childSnapshot.key();
-          }
-      );
-  });
-
-  console.log(trainIDs);
